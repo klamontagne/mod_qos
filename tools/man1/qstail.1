@@ -1,0 +1,19 @@
+.TH QSTAIL 1 "May 2014" "mod_qos utilities 11.1" "qstail man page"
+
+.SH NAME
+qstail \- an utility printing the end of a log file starting at the specified pattern. 
+.SH SYNOPSIS
+qstail \-i <path> \-p <pattern> 
+.SH DESCRIPTION
+qstail shows the end of a log file beginning with the line containing the specified pattern. This may be used to show all lines which has been written after a certain event (e.g., server restart) or time stamp. 
+.SH OPTIONS
+.TP
+\-i <path> 
+Input file to read the data from. 
+.TP
+\-p <pattern> 
+Search pattern (literal string). 
+.SH SEE ALSO
+qsexec(1), qsfilter2(1), qsgeo(1), qsgrep(1), qshead(1), qslog(1), qslogger(1), qspng(1), qsrotate(1), qssign(1)
+.SH AUTHOR
+Pascal Buchbinder, http://opensource.adnovum.ch/mod_qos/

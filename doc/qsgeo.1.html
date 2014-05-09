@@ -1,0 +1,77 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of QSGEO</TITLE>
+<META name='KeyWords' content='Quality of Service, QoS, Apache Web Server, Web application security, WAF, Open Source Software, AdNovum Informatik, Nevis, Security, Proxy'/>
+<META name='author' content='Pascal Buchbinder' />
+</HEAD><BODY>
+<H1>QSGEO</H1>
+Section: qsgeo man page (1)<BR>Updated: May 2014<BR><A HREF="#index">Index</A>
+<A HREF="index.html#utilities">Return to Main Contents</A><HR>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+qsgeo - an utility to lookup a client's country code. 
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+qsgeo -d &lt;path&gt; [-l] [-s] [-ip &lt;ip&gt;] 
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION</H2>
+
+Use this utility to resolve the country codes of IP addresses within existing log files. The utility reads the log file data from stdin and writes them, with the injected country code, to stdout. 
+<A NAME="lbAE">&nbsp;</A>
+<H2>OPTIONS</H2>
+
+<P>
+<DL COMPACT>
+<DT>-d &lt;path&gt; <DD>
+Specifies the path to the geographical database files (CSV file containing IP address ranges and country codes). 
+<DT>-s <DD>
+Writes a summary of the requests per country only. 
+<DT>-l <DD>
+Writes the database to stdout (ignoring stdin) inserting local (127.*) and private (10.*, 172.16*, 192.168.*) network addresses. 
+<DT>-ip &lt;ip&gt; <DD>
+Resolves a single IP address instead of processing a log file. 
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>EXAMPLE</H2>
+
+Reading the file access_log and adding the country code to the IP address field:
+<P>
+<BR>&nbsp;&nbsp;cat&nbsp;access_log&nbsp;|&nbsp;qsgeo&nbsp;-d&nbsp;GeoIPCountryWhois.csv
+<P>
+Reading the file access_log and showing a summary only:
+<P>
+<BR>&nbsp;&nbsp;cat&nbsp;access_log&nbsp;|&nbsp;qsgeo&nbsp;-d&nbsp;GeoIPCountryWhois.csv&nbsp;-s
+<P>
+Resolving a single IP address:
+<P>
+<BR>&nbsp;&nbsp;qsgeo&nbsp;-d&nbsp;GeoIPCountryWhois.csv&nbsp;-ip&nbsp;192.84.12.23
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>SEE ALSO</H2>
+
+<A HREF="qsexec.1.html">qsexec</A>(1), <A HREF="qsfilter2.1.html">qsfilter2</A>(1), <A HREF="qsgrep.1.html">qsgrep</A>(1), <A HREF="qshead.1.html">qshead</A>(1), <A HREF="qslog.1.html">qslog</A>(1), <A HREF="qslogger.1.html">qslogger</A>(1), <A HREF="qspng.1.html">qspng</A>(1), <A HREF="qsrotate.1.html">qsrotate</A>(1), <A HREF="qssign.1.html">qssign</A>(1), <A HREF="qstail.1.html">qstail</A>(1)
+<A NAME="lbAH">&nbsp;</A>
+<H2>AUTHOR</H2>
+
+Pascal Buchbinder, <A HREF="http://opensource.adnovum.ch/mod_qos/">http://opensource.adnovum.ch/mod_qos/</A>
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">OPTIONS</A><DD>
+<DT><A HREF="#lbAF">EXAMPLE</A><DD>
+<DT><A HREF="#lbAG">SEE ALSO</A><DD>
+<DT><A HREF="#lbAH">AUTHOR</A><DD>
+</DL>
+<HR>
+<img align="right" border="0" src="nevis.gif"/>
+</BODY>
+</HTML>

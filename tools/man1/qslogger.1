@@ -1,0 +1,35 @@
+.TH QSLOGGER 1 "May 2014" "mod_qos utilities 11.1" "qslogger man page"
+
+.SH NAME
+qslogger \- another shell command interface to the system log module (syslog). 
+.SH SYNOPSIS
+qslogger [\-r <expression>] [\-t <tag>] [\-f <facility>] [\-l <level>] [\-d <level>] [\-p] 
+.SH DESCRIPTION
+Use this utility to forward log messages to the systems syslog facility, e.g., to forward the messages to a remote host. It reads data from stdin. 
+.SH OPTIONS
+
+.TP
+\-r <expression> 
+Specifies a regular expression which shall be used to determine the severity (syslog level) for each log line. The default pattern '^\\[[0\-9a\-zA\-Z :]+\\] \\[([a\-z]+)\\] ' can be used for Apache error log messages but you may configure your own pattern matching and other log format too. Use brackets to define the string enclosing the severity string. Default level (if severity can't be determined) is defined by the option '\-d' (see below). 
+.TP
+\-t <tag> 
+Defines the tag name which shall be used to define the origin of the messages, e.g. 'httpd'. 
+.TP
+\-f <facility> 
+Defines the syslog facility. Default is 'daemon'. 
+.TP
+\-l <level> 
+Defines the minimal severity a message must have in order to be forwarded. Default is 'DEBUG'. 
+.TP
+\-d <level> 
+The default severity if the specified pattern (\-r) does not match and the message's serverity can't be determined. Default is 'NOTICE'. 
+.TP
+\-p 
+Writes data also to stdout (for piped logging). 
+.SH EXAMPLE
+  ErrorLog "|./qslogger \-t apache \-f local7"
+
+.SH SEE ALSO
+qsexec(1), qsfilter2(1), qsgeo(1), qsgrep(1), qshead(1), qslog(1), qspng(1), qsrotate(1), qssign(1), qstail(1)
+.SH AUTHOR
+Pascal Buchbinder, http://opensource.adnovum.ch/mod_qos/

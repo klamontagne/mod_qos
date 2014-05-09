@@ -1,0 +1,82 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of QSROTATE</TITLE>
+<META name='KeyWords' content='Quality of Service, QoS, Apache Web Server, Web application security, WAF, Open Source Software, AdNovum Informatik, Nevis, Security, Proxy'/>
+<META name='author' content='Pascal Buchbinder' />
+</HEAD><BODY>
+<H1>QSROTATE</H1>
+Section: qsrotate man page (1)<BR>Updated: May 2014<BR><A HREF="#index">Index</A>
+<A HREF="index.html#utilities">Return to Main Contents</A><HR>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+qsrotate - a log rotation tool (similar to Apache's rotatelogs). 
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+qsrotate -o &lt;file&gt; [-s &lt;sec&gt; [-t &lt;hours&gt;]] [-f] [-z] [-g &lt;num&gt;] [-u &lt;name&gt;] [-p] 
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION</H2>
+
+qsrotate reads from stdin (piped log) and writes the data to the provided file rotating the file after the specified time. 
+<A NAME="lbAE">&nbsp;</A>
+<H2>OPTIONS</H2>
+
+<DL COMPACT>
+<DT>-o &lt;file&gt; <DD>
+Output log file to write the data to (use an absolute path). 
+<DT>-s &lt;sec&gt; <DD>
+Rotation interval in seconds, default are 86400 seconds. 
+<DT>-t &lt;hours&gt; <DD>
+Offset to UTC (enables also DST support), default is 0. 
+<DT>-b &lt;bytes&gt; <DD>
+File size limitation (default are 2147352576 bytes). 
+<DT>-f <DD>
+Forced log rotation even no data is written. 
+<DT>-z <DD>
+Compress (gzip) the rotated file. 
+<DT>-g &lt;num&gt; <DD>
+Generations (number of files to keep). 
+<DT>-u &lt;name&gt; <DD>
+Become another user, e.g. www-data. 
+<DT>-p <DD>
+Writes data also to stdout (for piped logging). 
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>EXAMPLE</H2>
+
+<BR>&nbsp;&nbsp;TransferLog&nbsp;&quot;|qsrotate&nbsp;-f&nbsp;-z&nbsp;-g&nbsp;3&nbsp;-o&nbsp;/dest/file&nbsp;-s&nbsp;86400&quot;
+<P>
+The name of the rotated file will be /dest/filee.YYYYmmddHHMMSS where YYYYmmddHHMMSS is the system time at which the data has been rotated. 
+<A NAME="lbAG">&nbsp;</A>
+<H2>NOTE</H2>
+
+Each qsrotate instance must use an individual file. 
+<A NAME="lbAH">&nbsp;</A>
+<H2>SEE ALSO</H2>
+
+<A HREF="qsexec.1.html">qsexec</A>(1), <A HREF="qsfilter2.1.html">qsfilter2</A>(1), <A HREF="qsgeo.1.html">qsgeo</A>(1), <A HREF="qsgrep.1.html">qsgrep</A>(1), <A HREF="qshead.1.html">qshead</A>(1), <A HREF="qslog.1.html">qslog</A>(1), <A HREF="qslogger.1.html">qslogger</A>(1), <A HREF="qspng.1.html">qspng</A>(1), <A HREF="qssign.1.html">qssign</A>(1), <A HREF="qstail.1.html">qstail</A>(1)
+<A NAME="lbAI">&nbsp;</A>
+<H2>AUTHOR</H2>
+
+Pascal Buchbinder, <A HREF="http://opensource.adnovum.ch/mod_qos/">http://opensource.adnovum.ch/mod_qos/</A>
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">OPTIONS</A><DD>
+<DT><A HREF="#lbAF">EXAMPLE</A><DD>
+<DT><A HREF="#lbAG">NOTE</A><DD>
+<DT><A HREF="#lbAH">SEE ALSO</A><DD>
+<DT><A HREF="#lbAI">AUTHOR</A><DD>
+</DL>
+<HR>
+<img align="right" border="0" src="nevis.gif"/>
+</BODY>
+</HTML>

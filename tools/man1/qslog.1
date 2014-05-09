@@ -1,0 +1,89 @@
+.TH QSLOG 1 "May 2014" "mod_qos utilities 11.1" "qslog man page"
+
+.SH NAME
+qslog \- collects request statistics from access log data. 
+.SH SYNOPSIS
+qslog \-f <format_string> \-o <out_file> [\-p[c|u[c]] [\-v]] [\-x [<num>]] [\-u <name>] [\-m] [\-c <path>] 
+.SH DESCRIPTION
+qslog is a real time access log analyzer. It collects the data from stdin. The output is written to the specified file every minute and includes the following entries:
+  \- requests per second (r/s)
+  \- number of requests within measured time (req)
+  \- bytes sent to the client per second (b/s)
+  \- bytes received from the client per second (ib/s)
+  \- repsonse status codes within the last minute (1xx,2xx,3xx,4xx,5xx)
+  \- average response duration (av)
+  \- average response duration in milliseconds (avms)
+  \- distribution of response durations within the last minute
+(<1s,1s,2s,3s,4s,5s,>5) 
+  \- number of established (new) connections within the measured time (esco)
+  \- average system load (sl)
+  \- free memory (m) (not available for all platforms)
+  \- number of client ip addresses seen withn the last 600 seconds (ip)
+  \- number of different users seen withn the last 600 seconds (usr)
+  \- number of events identified by the 'E' format character
+  \- number of mod_qos events within the last minute (qV=create session,
+qS=session pass, qD=access denied, qK=connection closed, qT=dynamic keep\-alive, qL=request/response slow down, qs=serialized request) 
+.SH OPTIONS
+.TP
+\-f <format_string> 
+Defines the log data format and the positions of data elements processed by this utility. See to the 'LogFormat' directive of the httpd.conf file to see the format defintions of the servers access log data. 
+     qslog knows the following elements:
+     I defines the client ip address (%h)
+     R defines the request line (%r)
+     S defines HTTP response status code (%s)
+     B defines the transferred bytes (%b or %O)
+     i defines the received bytes (%I)
+     T defines the request duration (%T)
+     t defines the request duration in milliseconds (may be used instead of T)
+     D defines the request duration in microseconds (may be used instead of T) (%D)
+     k defines the number of keepalive requests on the connection (%k)
+     U defines the user tracking id (%{mod_qos_user_id}e)
+     Q defines the mod_qos_ev event message (%{mod_qos_ev}e)
+     C defines the element for the detailed log (\-c option), e.g. "%U"
+     s arbitrary counter to add up (sum within a minute)
+     a arbitrary counter to build an average from (average per request)
+     A arbitrary counter to build an average from (average per request)
+     E comma separated list of event strings
+     c content type (%{content\-type}o), available in \-pc mode only
+     m request method (GET/POST) (%m), available in \-pc mode only
+     . defines an element to ignore (unknown string)
+
+.TP
+\-o <out_file> 
+Specifies the file to store the output to. 
+.TP
+\-p 
+Used for post processing when reading the log data from a file (cat/pipe). qslog is started using it's offline mode (extracting the time stamps from the log lines) in order to process existing log files. The option "\-pc" may be used alternatively if you want to gather request information per client (identified by IP address (I) or user tracking id (U) showing how many request each client has performed within the captured period of time). "\-pc" supports the format characters IURSBTtDkEcm. The option "\-pu" collects statistics on a per URL level (supports format characters RSTtD). "\-puc" is very similar to "\-pu" but cuts the end (handler) of each URL. 
+.TP
+\-v 
+Verbose mode. 
+.TP
+\-x [<num>] 
+Rotates the output file once a day (move). You may specify the number of rotated files to keep. Default are 14. 
+.TP
+\-u <name> 
+Becomes another user, e.g. www\-data. 
+.TP
+\-m 
+Calculates free system memory every minute. 
+.TP
+\-c <path> 
+Enables the collection of log statitics for different request types. 'path' specifies the necessary rule file. Each rule consists of a rule identifier and a regular expression to identify a request seprarated by a colon, e.g., 01:^(/a)|(/c). The regular expressions are matched against the log data element which has been identified by the 'C' format character. 
+.SH EXAMPLE
+Configuration using pipped logging:
+
+  LogFormat "%t %h \\"%r\\" %>s %b \\"%{User\-Agent}i\\" %T"
+  TransferLog "|/bin/qslog \-f ..IRSB.T \-x \-o /var/logs/stat_log"
+
+Configuration using the CustomLog directive:
+
+  CustomLog "|/bin/qslog \-f ISBTQ \-x \-o /var/logs/stat_log" "%h %>s %b %T %{mod_qos_ev}e"
+
+Post processing:
+
+  cat access_log | /bin/qslog \-f ..IRSB.T \-o /var/logs/stat_log \-p
+
+.SH SEE ALSO
+qsexec(1), qsfilter2(1), qsgeo(1), qsgrep(1), qshead(1), qslogger(1), qspng(1), qsrotate(1), qssign(1), qstail(1)
+.SH AUTHOR
+Pascal Buchbinder, http://opensource.adnovum.ch/mod_qos/

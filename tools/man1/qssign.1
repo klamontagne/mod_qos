@@ -1,0 +1,35 @@
+.TH QSSIGN 1 "May 2014" "mod_qos utilities 11.1" "qssign man page"
+
+.SH NAME
+qssign \- an utility to sign and verify the integrity of log data. 
+.SH SYNOPSIS
+qssign \-s|S <secret> [\-e] [\-v] 
+.SH DESCRIPTION
+qssign is a log data integrity check tool. It reads log data from stdin (pipe) and writes the signed data to stdout. 
+.SH OPTIONS
+.TP
+\-s <secret> 
+Passphrase used to calculate signature. 
+.TP
+\-S <program> 
+Specifies a program which writes the passphrase to stdout. 
+.TP
+\-e 
+Writes end marker when stopping data signing. 
+.TP
+\-v 
+Verification mode checking the integrity of signed data. 
+.SH EXAMPLE
+Sign:
+
+ TransferLog "|/bin/qssign \-s password \-e |/bin/qsrotate \-o /var/log/apache/access_log"
+
+
+Verify:
+
+ cat access_log | qssign \-s password \-v
+
+.SH SEE ALSO
+qsexec(1), qsfilter2(1), qsgeo(1), qsgrep(1), qshead(1), qslog(1), qslogger(1), qspng(1), qsrotate(1), qstail(1)
+.SH AUTHOR
+Pascal Buchbinder, http://opensource.adnovum.ch/mod_qos/

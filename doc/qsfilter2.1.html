@@ -1,0 +1,129 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of QSFILTER2</TITLE>
+<META name='KeyWords' content='Quality of Service, QoS, Apache Web Server, Web application security, WAF, Open Source Software, AdNovum Informatik, Nevis, Security, Proxy'/>
+<META name='author' content='Pascal Buchbinder' />
+</HEAD><BODY>
+<H1>QSFILTER2</H1>
+Section: qsfilter2 man page (1)<BR>Updated: May 2014<BR><A HREF="#index">Index</A>
+<A HREF="index.html#utilities">Return to Main Contents</A><HR>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+qsfilter2 - an utility to generate mod_qos request line rules out from existing access/audit log data. 
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+qsfilter2 -i &lt;path&gt; [-c &lt;path&gt;] [-d &lt;num&gt;] [-h] [-b &lt;num&gt;] [-p|-s|-m|-o] [-l &lt;len&gt;] [-n] [-e] [-u 'uni'] [-k &lt;prefix&gt;] [-t] [-f &lt;path&gt;] [-v 0|1|2] 
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION</H2><p><img src="qsfilter2_process.gif" alt="overview"></p>
+
+mod_qos implements a request filter which validates each request line. The module supports both, negative and positive security model. The QS_Deny* directives are used to specify request line patterns which are not allowed to access the server (negative security model / blacklist). These rules are used to restrict access to certain resources which should not be available to users or to protect the server from malicious patterns. The QS_Permit* rules implement a positive security model (whitelist). These directives are used to define allowed request line patterns. Request which do not match any of thses patterns are not allowed to access the server. 
+<P>
+qsfilter2 is an audit log analyzer used to generate filter rules (perl compatible regular expressions) which may be used by mod_qos to deny access for suspect requests (QS_PermitUri rules). It parses existing audit log files in order to generate request patterns covering all allowed requests. 
+<A NAME="lbAE">&nbsp;</A>
+<H2>OPTIONS</H2>
+
+<DL COMPACT>
+<DT>-i &lt;path&gt; <DD>
+Input file containing request URIs. The URIs for this file have to be extracted from the servers access logs. Each line of the input file contains a request URI consiting of a path and and query. 
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Example:
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/aaa/index.do
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/aaa/edit?image=1.jpg
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/aaa/image/1.jpg
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/aaa/view?page=1
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/aaa/edit?document=1
+<P>
+These access log data must include current request URIs but also request lines from previous rule generation steps. It must also include request lines which cover manually generated rules. 
+<DT>-c &lt;path&gt; <DD>
+mod_qos configuration file defining QS_DenyRequestLine and QS_PermitUri directives. qsfilter2 generates rules from access log data automatically. Manually generated rules (QS_PermitUri) may be provided from this file. Note: each manual rule must be represented by a request URI in the input data (-i) in order to make sure not to be deleted by the rule optimisation algorithm. QS_Deny* rules from this file are used to filter request lines which should not be used for whitelist rule generation. 
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Example:
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;manually&nbsp;defined&nbsp;whitelist&nbsp;rule:
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;QS_PermitUri&nbsp;+view&nbsp;deny&nbsp;&quot;^[/a-zA-Z0-9]+/view\?(page=[0-9]+)?$&quot;
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;filter&nbsp;unwanted&nbsp;request&nbsp;line&nbsp;patterns:
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;QS_DenyRequestLine&nbsp;+printable&nbsp;deny&nbsp;&quot;.*[\x00-\x19].*&quot;
+<P>
+<P>
+<DT>-d &lt;num&gt; <DD>
+Depth (sub locations) of the path string which is defined as a literal string. Default is 1. 
+<DT>-h <DD>
+Always use a string representing the handler name in the path even the url does not have a query. See also -d option. 
+<DT>-b &lt;num&gt; <DD>
+Replaces url pattern by the regular expression when detecting a base64/hex encoded string. Detecting sensibility is defined by a numeric value. You should use values higher than 5 (default) or 0 to disable this function. 
+<DT>-p <DD>
+Repesents query by pcre only (no literal strings). 
+<DT>-s <DD>
+Uses one single pcre for the whole query string. 
+<DT>-m <DD>
+Uses one pcre for multipe query values (recommended mode). 
+<DT>-o <DD>
+Does not care the order of query parameters. 
+<DT>-l &lt;len&gt; <DD>
+Outsizes the query length by the defined length ({0,size+len}), default is 10. 
+<DT>-n <DD>
+Disables redundant rules elimination. 
+<DT>-e <DD>
+Exit on error. 
+<DT>-u 'uni' <DD>
+Enables additional decoding methods. Use the same settings as you have used for the QS_Decoding directive. 
+<DT>-p <DD>
+Repesents query by pcre only (no literal strings). Determines the worst case performance for the generated whitelist by applying each rule for each request line (output is real time filter duration per request line in milliseconds). 
+<DT>-k &lt;prefix&gt; <DD>
+Prefix used to generate rule identifiers (QSF by default). 
+<DT>-t <DD>
+Calculates the maximal latency per request (worst case) using the generated rules. 
+<DT>-f &lt;path&gt; <DD>
+Filters the input by the provided path (prefix) only processing matching lines. 
+<DT>-v &lt;level&gt; <DD>
+Verbose mode. (0=silent, 1=rule source, 2=detailed). Default is 1. Don't use rules you haven't checked the request data used to generate it! Level 1 is highly recommended (as long as you don't have created the log data using your own web crawler). 
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>OUTPUT</H2>
+
+The output of qsfilter2 is written to stdout. The output contains the generated QS_PermitUri directives but also information about the source which has been used to generate these rules. It is very important to check the validity of each request line which has been used to calculate the QS_PermitUri rules. Each request line which has been used to generate a new rule is shown in the output prefixed by &quot;ADD line &lt;line number&gt;:&quot;. These request lines should be stored and reused at any later rule generation (add them to the URI input file). The subsequent line shows the generated rule. At the end of data processing a list of all generated QS_PermitUri rules is shown. These directives may be used withn the configuration file used by mod_qos. 
+<A NAME="lbAG">&nbsp;</A>
+<H2>EXAMPLE</H2>
+
+<BR>&nbsp;&nbsp;./qsfilter2&nbsp;-i&nbsp;loc.txt&nbsp;-c&nbsp;httpd.conf&nbsp;-m&nbsp;-e
+<BR>&nbsp;&nbsp;...
+<BR>&nbsp;&nbsp;#&nbsp;ADD&nbsp;line&nbsp;1:&nbsp;/aaa/index.do
+<BR>&nbsp;&nbsp;#&nbsp;003&nbsp;^(/[a-zA-Z0-9\-_]+)+[/]?\.?[a-zA-Z]{0,4}$
+<BR>&nbsp;&nbsp;#&nbsp;ADD&nbsp;line&nbsp;3:&nbsp;/aaa/view?page=1
+<BR>&nbsp;&nbsp;#&nbsp;---&nbsp;^[/a-zA-Z0-9]+/view\?(page=[0-9]+)?$
+<BR>&nbsp;&nbsp;#&nbsp;ADD&nbsp;line&nbsp;4:&nbsp;/aaa/edit?document=1
+<BR>&nbsp;&nbsp;#&nbsp;004&nbsp;^[/a-zA-Z]+/edit\?((document)(=[0-9]*)*[&amp;]?)*$
+<BR>&nbsp;&nbsp;#&nbsp;ADD&nbsp;line&nbsp;5:&nbsp;/aaa/edit?image=1.jpg
+<BR>&nbsp;&nbsp;#&nbsp;005&nbsp;^[/a-zA-Z]+/edit\?((image)(=[0-9\.a-zA-Z]*)*[&amp;]?)*$
+<BR>&nbsp;&nbsp;...
+<BR>&nbsp;&nbsp;QS_PermitUri&nbsp;+QSF001&nbsp;deny&nbsp;&quot;^[/a-zA-Z]+/edit\?((document|image)(=[0-9\.a-zA-Z]*)*[&amp;]?)*$&quot;
+<BR>&nbsp;&nbsp;QS_PermitUri&nbsp;+QSF002&nbsp;deny&nbsp;&quot;^[/a-zA-Z0-9]+/view\?(page=[0-9]+)?$&quot;
+<BR>&nbsp;&nbsp;QS_PermitUri&nbsp;+QSF003&nbsp;deny&nbsp;&quot;^(/[a-zA-Z0-9\-_]+)+[/]?\.?[a-zA-Z]{0,4}$&quot;
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>SEE ALSO</H2>
+
+<A HREF="qsexec.1.html">qsexec</A>(1), <A HREF="qsgeo.1.html">qsgeo</A>(1), <A HREF="qsgrep.1.html">qsgrep</A>(1), <A HREF="qshead.1.html">qshead</A>(1), <A HREF="qslog.1.html">qslog</A>(1), <A HREF="qslogger.1.html">qslogger</A>(1), <A HREF="qspng.1.html">qspng</A>(1), <A HREF="qsrotate.1.html">qsrotate</A>(1), <A HREF="qssign.1.html">qssign</A>(1), <A HREF="qstail.1.html">qstail</A>(1)
+<A NAME="lbAI">&nbsp;</A>
+<H2>AUTHOR</H2>
+
+Pascal Buchbinder, <A HREF="http://opensource.adnovum.ch/mod_qos/">http://opensource.adnovum.ch/mod_qos/</A>
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">OPTIONS</A><DD>
+<DT><A HREF="#lbAF">OUTPUT</A><DD>
+<DT><A HREF="#lbAG">EXAMPLE</A><DD>
+<DT><A HREF="#lbAH">SEE ALSO</A><DD>
+<DT><A HREF="#lbAI">AUTHOR</A><DD>
+</DL>
+<HR>
+<img align="right" border="0" src="nevis.gif"/>
+</BODY>
+</HTML>

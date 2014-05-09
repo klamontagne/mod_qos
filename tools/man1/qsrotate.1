@@ -1,0 +1,46 @@
+.TH QSROTATE 1 "May 2014" "mod_qos utilities 11.1" "qsrotate man page"
+
+.SH NAME
+qsrotate \- a log rotation tool (similar to Apache's rotatelogs). 
+.SH SYNOPSIS
+qsrotate \-o <file> [\-s <sec> [\-t <hours>]] [\-f] [\-z] [\-g <num>] [\-u <name>] [\-p] 
+.SH DESCRIPTION
+qsrotate reads from stdin (piped log) and writes the data to the provided file rotating the file after the specified time. 
+.SH OPTIONS
+.TP
+\-o <file> 
+Output log file to write the data to (use an absolute path). 
+.TP
+\-s <sec> 
+Rotation interval in seconds, default are 86400 seconds. 
+.TP
+\-t <hours> 
+Offset to UTC (enables also DST support), default is 0. 
+.TP
+\-b <bytes> 
+File size limitation (default are 2147352576 bytes). 
+.TP
+\-f 
+Forced log rotation even no data is written. 
+.TP
+\-z 
+Compress (gzip) the rotated file. 
+.TP
+\-g <num> 
+Generations (number of files to keep). 
+.TP
+\-u <name> 
+Become another user, e.g. www\-data. 
+.TP
+\-p 
+Writes data also to stdout (for piped logging). 
+.SH EXAMPLE
+  TransferLog "|qsrotate \-f \-z \-g 3 \-o /dest/file \-s 86400"
+
+The name of the rotated file will be /dest/filee.YYYYmmddHHMMSS where YYYYmmddHHMMSS is the system time at which the data has been rotated. 
+.SH NOTE
+Each qsrotate instance must use an individual file. 
+.SH SEE ALSO
+qsexec(1), qsfilter2(1), qsgeo(1), qsgrep(1), qshead(1), qslog(1), qslogger(1), qspng(1), qssign(1), qstail(1)
+.SH AUTHOR
+Pascal Buchbinder, http://opensource.adnovum.ch/mod_qos/

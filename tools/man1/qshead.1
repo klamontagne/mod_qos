@@ -1,0 +1,16 @@
+.TH QSHEAD 1 "May 2014" "mod_qos utilities 11.1" "qshead man page"
+
+.SH NAME
+qshead \- an utility reading from stdin and printing all lines to stdout until reaching the defined pattern. 
+.SH SYNOPSIS
+qshead \-p <pattern> 
+.SH DESCRIPTION
+qshead reads lines from stdin and prints them to stdout unitl a line contains the specified pattern (literal string). 
+.SH OPTIONS
+.TP
+\-p <pattern> 
+Search pattern (literal string). 
+.SH SEE ALSO
+qsexec(1), qsfilter2(1), qsgeo(1), qsgrep(1), qslog(1), qslogger(1), qspng(1), qsrotate(1), qssign(1) qstail(1)
+.SH AUTHOR
+Pascal Buchbinder, http://opensource.adnovum.ch/mod_qos/

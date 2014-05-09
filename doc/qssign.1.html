@@ -1,0 +1,73 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of QSSIGN</TITLE>
+<META name='KeyWords' content='Quality of Service, QoS, Apache Web Server, Web application security, WAF, Open Source Software, AdNovum Informatik, Nevis, Security, Proxy'/>
+<META name='author' content='Pascal Buchbinder' />
+</HEAD><BODY>
+<H1>QSSIGN</H1>
+Section: qssign man page (1)<BR>Updated: May 2014<BR><A HREF="#index">Index</A>
+<A HREF="index.html#utilities">Return to Main Contents</A><HR>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+qssign - an utility to sign and verify the integrity of log data. 
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+qssign -s|S &lt;secret&gt; [-e] [-v] 
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION</H2>
+
+qssign is a log data integrity check tool. It reads log data from stdin (pipe) and writes the signed data to stdout. 
+<A NAME="lbAE">&nbsp;</A>
+<H2>OPTIONS</H2>
+
+<DL COMPACT>
+<DT>-s &lt;secret&gt; <DD>
+Passphrase used to calculate signature. 
+<DT>-S &lt;program&gt; <DD>
+Specifies a program which writes the passphrase to stdout. 
+<DT>-e <DD>
+Writes end marker when stopping data signing. 
+<DT>-v <DD>
+Verification mode checking the integrity of signed data. 
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>EXAMPLE</H2>
+
+Sign:
+<P>
+<BR>&nbsp;TransferLog&nbsp;&quot;|/bin/qssign&nbsp;-s&nbsp;password&nbsp;-e&nbsp;|/bin/qsrotate&nbsp;-o&nbsp;/var/log/apache/access_log&quot;
+<P>
+<P>
+Verify:
+<P>
+<BR>&nbsp;cat&nbsp;access_log&nbsp;|&nbsp;qssign&nbsp;-s&nbsp;password&nbsp;-v
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>SEE ALSO</H2>
+
+<A HREF="qsexec.1.html">qsexec</A>(1), <A HREF="qsfilter2.1.html">qsfilter2</A>(1), <A HREF="qsgeo.1.html">qsgeo</A>(1), <A HREF="qsgrep.1.html">qsgrep</A>(1), <A HREF="qshead.1.html">qshead</A>(1), <A HREF="qslog.1.html">qslog</A>(1), <A HREF="qslogger.1.html">qslogger</A>(1), <A HREF="qspng.1.html">qspng</A>(1), <A HREF="qsrotate.1.html">qsrotate</A>(1), <A HREF="qstail.1.html">qstail</A>(1)
+<A NAME="lbAH">&nbsp;</A>
+<H2>AUTHOR</H2>
+
+Pascal Buchbinder, <A HREF="http://opensource.adnovum.ch/mod_qos/">http://opensource.adnovum.ch/mod_qos/</A>
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">OPTIONS</A><DD>
+<DT><A HREF="#lbAF">EXAMPLE</A><DD>
+<DT><A HREF="#lbAG">SEE ALSO</A><DD>
+<DT><A HREF="#lbAH">AUTHOR</A><DD>
+</DL>
+<HR>
+<img align="right" border="0" src="nevis.gif"/>
+</BODY>
+</HTML>

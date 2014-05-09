@@ -1,0 +1,28 @@
+.TH QSGREP 1 "May 2014" "mod_qos utilities 11.1" "qsgrep man page"
+
+.SH NAME
+qsgrep \- prints matching patterns within a file. 
+.SH SYNOPSIS
+qsgrep \-e <pattern> \-o <sub string> [<path>] 
+.SH DESCRIPTION
+qsgrep is a simple tool to search patterns within files. It uses regular expressions to find patterns and prints the submatches within a pre\-defined format string. 
+.SH OPTIONS
+.TP
+\-e <pattern> 
+Specifes the search pattern. 
+.TP
+\-o <string> 
+Defines the output string where $0\-$9 are substituted by the submatches of the regular expression. 
+.TP
+<path> 
+Defines the input file to process. qsgrep reads from from standard input if this parameter is omitted. 
+
+.SH EXAMPLE
+Shows the IP addresses of clients causing mod_qos(031) messages):
+
+  qsgrep \-e 'mod_qos\\(031\\).*, c=([a\-zA\-Z0\-9:.]*)' \-o 'ip=$1' error_log
+
+.SH SEE ALSO
+qsexec(1), qsfilter2(1), qsgeo(1), qshead(1), qslog(1), qslogger(1), qspng(1), qsrotate(1), qssign(1), qstail(1)
+.SH AUTHOR
+Pascal Buchbinder, http://opensource.adnovum.ch/mod_qos/

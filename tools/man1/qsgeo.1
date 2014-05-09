@@ -1,0 +1,39 @@
+.TH QSGEO 1 "May 2014" "mod_qos utilities 11.1" "qsgeo man page"
+
+.SH NAME
+qsgeo \- an utility to lookup a client's country code. 
+.SH SYNOPSIS
+qsgeo \-d <path> [\-l] [\-s] [\-ip <ip>] 
+.SH DESCRIPTION
+Use this utility to resolve the country codes of IP addresses within existing log files. The utility reads the log file data from stdin and writes them, with the injected country code, to stdout. 
+.SH OPTIONS
+
+.TP
+\-d <path> 
+Specifies the path to the geographical database files (CSV file containing IP address ranges and country codes). 
+.TP
+\-s 
+Writes a summary of the requests per country only. 
+.TP
+\-l 
+Writes the database to stdout (ignoring stdin) inserting local (127.*) and private (10.*, 172.16*, 192.168.*) network addresses. 
+.TP
+\-ip <ip> 
+Resolves a single IP address instead of processing a log file. 
+.SH EXAMPLE
+Reading the file access_log and adding the country code to the IP address field:
+
+  cat access_log | qsgeo \-d GeoIPCountryWhois.csv
+
+Reading the file access_log and showing a summary only:
+
+  cat access_log | qsgeo \-d GeoIPCountryWhois.csv \-s
+
+Resolving a single IP address:
+
+  qsgeo \-d GeoIPCountryWhois.csv \-ip 192.84.12.23
+
+.SH SEE ALSO
+qsexec(1), qsfilter2(1), qsgrep(1), qshead(1), qslog(1), qslogger(1), qspng(1), qsrotate(1), qssign(1), qstail(1)
+.SH AUTHOR
+Pascal Buchbinder, http://opensource.adnovum.ch/mod_qos/
